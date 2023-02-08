@@ -18,7 +18,7 @@ import androidx.navigation.NavHostController
 import pt.ipp.estg.cmu.navigation.Screen
 
 @Composable
-fun SplashScreen(navController: NavHostController) {
+fun SplashScreen(navController: NavHostController, paddingValues: PaddingValues) {
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
