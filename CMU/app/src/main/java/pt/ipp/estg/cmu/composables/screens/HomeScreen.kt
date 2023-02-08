@@ -5,10 +5,11 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -30,16 +31,17 @@ fun BottomNavBar(navController: NavHostController, bottomBarState: Boolean) {
         BottomNavigation {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
+
             items.forEach { screen ->
                 BottomNavigationItem(
+                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                     icon = {
                         Icon(
                             imageVector = screen.icon,
-                            contentDescription = screen.title
+                            contentDescription = screen.title,
                         )
                     },
                     label = { Text(screen.title) },
-                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                     onClick = {
                         navController.navigate(screen.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
@@ -48,7 +50,9 @@ fun BottomNavBar(navController: NavHostController, bottomBarState: Boolean) {
                             launchSingleTop = true
                             restoreState = true
                         }
-                    }
+                    },
+                    selectedContentColor = Color.White,
+                    unselectedContentColor = Color.Black
                 )
             }
         }
