@@ -1,17 +1,18 @@
 package pt.ipp.estg.cmu.api.geoapify
 
+import pt.ipp.estg.cmu.api.GEOAPIFY_KEY
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface GeoapifyAPI {
-    @GET("places?apiKey=793c002378be4d9297b29f8f91cce826")
+    @GET("places?apiKey=${GEOAPIFY_KEY}")
     fun getPlaces(
         @Query("filter") filter: String,
         @Query("bias") bias: String,
     ): Call<List<GeoapifyResponse>>
 
-    @GET("places?apiKey=793c002378be4d9297b29f8f91cce826")
+    @GET("places?apiKey=${GEOAPIFY_KEY}")
     fun getPlacesCategories(
         @Query("categories") categories: String,
         @Query("filter") filter: String,

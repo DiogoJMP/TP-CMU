@@ -61,5 +61,6 @@ fun BottomNavBar(navController: NavHostController, bottomBarState: Boolean) {
 
 val items = listOf(
     BottomScreen.SitesScreen,
-    BottomScreen.FavoritesScreen
+    BottomScreen.FavoritesScreen,
+    BottomScreen.HistoryScreen
 )

@@ -1,32 +1,20 @@
 package pt.ipp.estg.cmu.navigation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.navigation
 import pt.ipp.estg.cmu.composables.screens.*
+import pt.ipp.estg.cmu.viewmodels.LocationVM
 
 @Composable
-fun Navigation(navController: NavHostController) {
+fun Navigation(navController: NavHostController, locationVM: LocationVM) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val bottomBarState = rememberSaveable { (mutableStateOf(false)) }
     when (navBackStackEntry?.destination?.route) {
@@ -63,10 +51,13 @@ fun Navigation(navController: NavHostController) {
                 HomeScreen()
             }
             composable(BottomScreen.SitesScreen.route) {
-                SitesScreen()
+                SitesScreen(locationVM)
             }
             composable(BottomScreen.FavoritesScreen.route) {
                 FavoritesScreen()
+            }
+            composable(BottomScreen.HistoryScreen.route) {
+                HistoryScreen()
             }
         }
     }
