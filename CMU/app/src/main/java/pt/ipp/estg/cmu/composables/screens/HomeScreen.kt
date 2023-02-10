@@ -3,6 +3,7 @@ package pt.ipp.estg.cmu.composables.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -15,6 +16,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import pt.ipp.estg.cmu.navigation.BottomScreen
+import pt.ipp.estg.cmu.ui.theme.Purple40
 
 @Composable
 fun HomeScreen() {
@@ -22,13 +24,16 @@ fun HomeScreen() {
 }
 
 @Composable
-fun BottomNavBar(navController: NavHostController, bottomBarState: Boolean) {
+fun BottomNavBar(
+    navController: NavHostController,
+    bottomBarState: Boolean
+) {
     AnimatedVisibility(
         visible = bottomBarState,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
     ) {
-        BottomNavigation {
+        BottomNavigation(backgroundColor = Purple40) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
 

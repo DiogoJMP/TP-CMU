@@ -42,22 +42,22 @@ fun Navigation(navController: NavHostController, locationVM: LocationVM) {
                 SplashScreen(navController = navController, paddingValues)
             }
             composable(route = Screen.SignUpScreen.route) {
-                SignUpScreen(navHostController = navController)
+                AuthScreen(navController = navController, type = "Sign Up")
             }
             composable(route = Screen.SignInScreen.route) {
-                SignInScreen(navHostController = navController)
+                AuthScreen(navController = navController, type = "Sign In")
             }
             composable(route = Screen.HomeScreen.route) {
                 HomeScreen()
             }
             composable(BottomScreen.SitesScreen.route) {
-                SitesScreen(locationVM)
+                SitesScreen(locationVM, paddingValues)
             }
             composable(BottomScreen.FavoritesScreen.route) {
-                FavoritesScreen()
+                FavoritesScreen(paddingValues)
             }
             composable(BottomScreen.HistoryScreen.route) {
-                HistoryScreen()
+                HistoryScreen(paddingValues)
             }
         }
     }

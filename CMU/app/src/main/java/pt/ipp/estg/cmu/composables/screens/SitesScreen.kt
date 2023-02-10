@@ -27,7 +27,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
-fun SitesScreen(currentLocationViewModel: LocationVM) {
+fun SitesScreen(currentLocationViewModel: LocationVM, paddingValues: PaddingValues) {
 
     val currentLocation by currentLocationViewModel.location.observeAsState()
     val sitesList = remember { mutableStateListOf<Site>() }
@@ -37,12 +37,12 @@ fun SitesScreen(currentLocationViewModel: LocationVM) {
             sitesList.addAll(data!!)
         }
     }
-    SitesList(sites = sitesList)
+    SitesList(sites = sitesList, paddingValues)
 }
 
 @Composable
-fun SitesList(sites: SnapshotStateList<Site>) {
-    LazyColumn() {
+fun SitesList(sites: SnapshotStateList<Site>, paddingValues: PaddingValues) {
+    LazyColumn(Modifier.padding(paddingValues)) {
         items(sites.size) { index ->
             Card(
                 border = BorderStroke(1.dp, Color.Blue),

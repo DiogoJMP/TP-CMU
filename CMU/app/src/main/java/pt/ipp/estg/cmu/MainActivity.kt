@@ -16,6 +16,9 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import pt.ipp.estg.cmu.navigation.Navigation
 import pt.ipp.estg.cmu.ui.theme.CMUTheme
 import pt.ipp.estg.cmu.viewmodels.LocationVM
@@ -23,6 +26,7 @@ import pt.ipp.estg.cmu.viewmodels.LocationVM
 class MainActivity : ComponentActivity() {
 
     val locationVM: LocationVM by viewModels()
+
     val locationCallback: LocationCallback = object : LocationCallback() {
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         override fun onLocationResult(locationResult: LocationResult) {

@@ -11,8 +11,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class Screen(val route: String) {
     object SplashScreen : Screen("splash")
     object HomeScreen : Screen("home")
-    object SignInScreen : Screen("signIn")
-    object SignUpScreen : Screen("signUp")
+    object SignInScreen : Screen("auth/signIn")
+    object SignUpScreen : Screen("auth/signUp")
 }
 
 sealed class BottomScreen(val route: String, val title: String, val icon: ImageVector) {
