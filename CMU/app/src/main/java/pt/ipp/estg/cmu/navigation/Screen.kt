@@ -1,11 +1,9 @@
 package pt.ipp.estg.cmu.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.materialIcon
+import androidx.compose.material.icons.outlined.Grade
 import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Power
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val route: String) {
@@ -17,10 +15,10 @@ sealed class Screen(val route: String) {
 
 sealed class BottomScreen(val route: String, val title: String, val icon: ImageVector) {
     object FavoritesScreen :
-        BottomScreen("favorites", "Favorites", Icons.Default.Star)
+        BottomScreen("favorites", "Favorites", Icons.Outlined.Grade)
 
     object SitesScreen :
-        BottomScreen("sites", "Sites", Icons.Default.Place)
+        BottomScreen("sites", "Sites", Icons.Outlined.Power)
 
     object HistoryScreen :
         BottomScreen("history", "History", Icons.Outlined.History)

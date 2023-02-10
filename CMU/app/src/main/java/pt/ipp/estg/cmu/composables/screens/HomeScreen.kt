@@ -11,10 +11,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import pt.ipp.estg.cmu.classes.SatisfyFont
 import pt.ipp.estg.cmu.navigation.BottomScreen
 import pt.ipp.estg.cmu.ui.theme.Purple40
 
@@ -46,7 +48,13 @@ fun BottomNavBar(
                             contentDescription = screen.title,
                         )
                     },
-                    label = { Text(screen.title) },
+                    label = {
+                        Text(
+                            screen.title,
+                            fontFamily = SatisfyFont().titleFamily,
+                            fontSize = 14.sp
+                        )
+                    },
                     onClick = {
                         navController.navigate(screen.route) {
                             popUpTo(navController.graph.findStartDestination().id) {

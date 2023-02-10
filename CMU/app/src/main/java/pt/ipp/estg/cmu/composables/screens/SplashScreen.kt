@@ -8,18 +8,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import pt.ipp.estg.cmu.classes.SatisfyFont
 import pt.ipp.estg.cmu.navigation.Screen
 import pt.ipp.estg.cmu.ui.theme.Purple40
 import pt.ipp.estg.cmu.ui.theme.Purple50
 
 @Composable
 fun SplashScreen(navController: NavHostController, paddingValues: PaddingValues) {
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -28,17 +32,28 @@ fun SplashScreen(navController: NavHostController, paddingValues: PaddingValues)
             .fillMaxHeight()
             .background(Purple40)
     ) {
+        Text(
+            text = "Powerless", color = Color.White, fontFamily = SatisfyFont().titleFamily,
+            style = TextStyle(
+                fontSize = 34.sp, shadow = Shadow(
+                    color = Color.Black,
+                    offset = Offset(5.0f, 10.0f),
+                    blurRadius = 3f
+                )
+            ),
+        )
+        Spacer(modifier = Modifier.size(26.dp))
         Button(
             onClick = { navController.navigate(Screen.SignUpScreen.route) },
             colors = ButtonDefaults.buttonColors(Purple50)
         ) {
-            Text(text = "Sign Up")
+            Text(text = "Sign Up", fontFamily = SatisfyFont().titleFamily)
         }
         Button(
             onClick = { navController.navigate(Screen.SignInScreen.route) },
             colors = ButtonDefaults.buttonColors(Purple50)
         ) {
-            Text(text = "Sign In")
+            Text(text = "Sign In", fontFamily = SatisfyFont().titleFamily)
         }
     }
 }

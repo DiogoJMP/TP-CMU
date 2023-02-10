@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import pt.ipp.estg.cmu.OCM_URL
-import pt.ipp.estg.cmu.Site
+import pt.ipp.estg.cmu.classes.Site
 import pt.ipp.estg.cmu.api.openchargemap.OCMResponse
 import pt.ipp.estg.cmu.api.openchargemap.OpenChargeMapAPI
 import pt.ipp.estg.cmu.retrofit.RetrofitHelper

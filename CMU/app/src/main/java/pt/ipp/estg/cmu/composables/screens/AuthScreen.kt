@@ -19,6 +19,7 @@ import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import pt.ipp.estg.cmu.classes.SatisfyFont
 import pt.ipp.estg.cmu.navigation.Screen
 import pt.ipp.estg.cmu.ui.theme.Purple40
 import pt.ipp.estg.cmu.ui.theme.Purple50
@@ -37,7 +38,7 @@ fun AuthScreen(navController: NavHostController, type: String) {
             .background(Purple40)
     ) {
         TextField(
-            leadingIcon = { if (email.isBlank()) LeadingIconView(Icons.Default.Mail) },
+            leadingIcon = { LeadingIconView(Icons.Default.Mail) },
             value = email,
             onValueChange = {
                 email = it
@@ -54,7 +55,7 @@ fun AuthScreen(navController: NavHostController, type: String) {
             singleLine = true,
         )
         TextField(
-            leadingIcon = { if (passwd.isBlank()) LeadingIconView(Icons.Default.Password) },
+            leadingIcon = { LeadingIconView(Icons.Default.Password) },
             value = passwd,
             onValueChange = {
                 passwd = it
@@ -72,43 +73,47 @@ fun AuthScreen(navController: NavHostController, type: String) {
             singleLine = true,
             //6 char min
         )
-        Button(
+        AuthButton(navController = navController, email = email, passwd = passwd, type = type)
+    }
+}
 
-            onClick = {
-                val auth: FirebaseAuth = Firebase.auth
-                if (type == "Sign Up") {
-                    auth.createUserWithEmailAndPassword(email, passwd)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                navController.navigate(Screen.HomeScreen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
+@Composable
+fun AuthButton(navController: NavHostController, email: String, passwd: String, type: String) {
+    Button(
+        onClick = {
+            val auth: FirebaseAuth = Firebase.auth
+            if (type == "Sign Up") {
+                auth.createUserWithEmailAndPassword(email, passwd)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            navController.navigate(Screen.HomeScreen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
                             }
                         }
-                }
-                if (type == "Sign In") {
-                    auth.signInWithEmailAndPassword(email, passwd)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                navController.navigate(Screen.HomeScreen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
+                    }
+            }
+            if (type == "Sign In") {
+                auth.signInWithEmailAndPassword(email, passwd)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            navController.navigate(Screen.HomeScreen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
                             }
                         }
-                }
-            },
-            colors = ButtonDefaults.buttonColors(Purple50)
-        ) {
-            Text(text = type)
-        }
+                    }
+            }
+        },
+        colors = ButtonDefaults.buttonColors(Purple50)
+    ) {
+        Text(text = type, fontFamily = SatisfyFont().titleFamily)
     }
 }
 
