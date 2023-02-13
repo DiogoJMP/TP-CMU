@@ -17,8 +17,8 @@ sealed class BottomScreen(val route: String, val title: String, val icon: ImageV
     object FavoritesScreen :
         BottomScreen("favorites", "Favorites", Icons.Outlined.Grade)
 
-    object SitesScreen :
-        BottomScreen("sites", "Sites", Icons.Outlined.Power)
+    object ChargersScreen :
+        BottomScreen("sites", "Chargers", Icons.Outlined.Power)
 
     object HistoryScreen :
         BottomScreen("history", "History", Icons.Outlined.History)

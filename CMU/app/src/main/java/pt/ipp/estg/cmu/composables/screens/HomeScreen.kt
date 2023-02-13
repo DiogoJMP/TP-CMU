@@ -3,7 +3,6 @@ package pt.ipp.estg.cmu.composables.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -16,9 +15,10 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import pt.ipp.estg.cmu.classes.SatisfyFont
+import pt.ipp.estg.cmu.classes.CustomFont
 import pt.ipp.estg.cmu.navigation.BottomScreen
 import pt.ipp.estg.cmu.ui.theme.Purple40
+import pt.ipp.estg.cmu.ui.theme.Purple50
 
 @Composable
 fun HomeScreen() {
@@ -51,7 +51,7 @@ fun BottomNavBar(
                     label = {
                         Text(
                             screen.title,
-                            fontFamily = SatisfyFont().titleFamily,
+                            fontFamily = CustomFont().titleFamily,
                             fontSize = 14.sp
                         )
                     },
@@ -65,7 +65,7 @@ fun BottomNavBar(
                         }
                     },
                     selectedContentColor = Color.White,
-                    unselectedContentColor = Color.Black
+                    unselectedContentColor = Purple50
                 )
             }
         }
@@ -73,7 +73,7 @@ fun BottomNavBar(
 }
 
 val items = listOf(
-    BottomScreen.SitesScreen,
+    BottomScreen.ChargersScreen,
     BottomScreen.FavoritesScreen,
     BottomScreen.HistoryScreen
 )

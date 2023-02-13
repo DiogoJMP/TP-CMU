@@ -7,7 +7,7 @@ import androidx.compose.ui.text.googlefonts.GoogleFont
 import pt.ipp.estg.cmu.R
 
 @OptIn(ExperimentalTextApi::class)
-class SatisfyFont {
+class CustomFont {
     private val provider = GoogleFont.Provider(
         providerAuthority = "com.google.android.gms.fonts",
         providerPackage = "com.google.android.gms",

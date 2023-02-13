@@ -10,11 +10,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import pt.ipp.estg.cmu.composables.screens.*
+import pt.ipp.estg.cmu.room.ChargerRepository
 import pt.ipp.estg.cmu.viewmodels.LocationVM
 
 @Composable
-fun Navigation(navController: NavHostController, locationVM: LocationVM) {
+fun Navigation(
+    navController: NavHostController,
+    locationVM: LocationVM,
+    chargerRepository: ChargerRepository,
+    auth: FirebaseAuth = Firebase.auth
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val bottomBarState = rememberSaveable { (mutableStateOf(false)) }
     when (navBackStackEntry?.destination?.route) {
@@ -42,22 +51,22 @@ fun Navigation(navController: NavHostController, locationVM: LocationVM) {
                 SplashScreen(navController = navController, paddingValues)
             }
             composable(route = Screen.SignUpScreen.route) {
-                AuthScreen(navController = navController, type = "Sign Up")
+                AuthScreen(navController = navController, type = "Sign Up", auth)
             }
             composable(route = Screen.SignInScreen.route) {
-                AuthScreen(navController = navController, type = "Sign In")
+                AuthScreen(navController = navController, type = "Sign In", auth)
             }
             composable(route = Screen.HomeScreen.route) {
                 HomeScreen()
             }
-            composable(BottomScreen.SitesScreen.route) {
-                SitesScreen(locationVM, paddingValues)
+            composable(BottomScreen.ChargersScreen.route) {
+                ChargersScreen(locationVM, paddingValues, chargerRepository, auth)
             }
             composable(BottomScreen.FavoritesScreen.route) {
-                FavoritesScreen(paddingValues)
+                FavoritesScreen(paddingValues, chargerRepository)
             }
             composable(BottomScreen.HistoryScreen.route) {
-                HistoryScreen(paddingValues)
+                HistoryScreen(paddingValues, chargerRepository)
             }
         }
     }

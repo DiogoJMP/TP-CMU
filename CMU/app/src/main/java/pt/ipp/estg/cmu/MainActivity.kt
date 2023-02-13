@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import pt.ipp.estg.cmu.navigation.Navigation
+import pt.ipp.estg.cmu.room.ChargerRepository
+import pt.ipp.estg.cmu.room.ChargerRoomDB
 import pt.ipp.estg.cmu.ui.theme.CMUTheme
 import pt.ipp.estg.cmu.viewmodels.LocationVM
 
@@ -27,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
     val locationVM: LocationVM by viewModels()
 
-    val locationCallback: LocationCallback = object : LocationCallback() {
+    private val locationCallback: LocationCallback = object : LocationCallback() {
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         override fun onLocationResult(locationResult: LocationResult) {
             val location = locationResult.locations.first()
@@ -37,11 +39,17 @@ class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var listeningForUpdates = false
 
+    private lateinit var chargerRepository: ChargerRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        val chargerDB = ChargerRoomDB.getInstance(this.baseContext.applicationContext)
+        val chargerDAO = chargerDB.chargerDAO()
+        chargerRepository = ChargerRepository(chargerDAO)
+
 
         startUpdatingLocation()
 
@@ -52,7 +60,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    Navigation(navController, locationVM)
+                    Navigation(navController, locationVM, chargerRepository)
                 }
             }
         }
