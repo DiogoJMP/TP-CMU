@@ -1,10 +1,13 @@
 package pt.ipp.estg.cmu.room
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import java.time.LocalDateTime
 
 @Dao
 interface ChargerDAO {
@@ -14,14 +17,19 @@ interface ChargerDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAsFavorite(charger: ChargerEntity)
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAsHistory(charger: ChargerEntity)
+    suspend fun insertAsHistory(
+        charger: ChargerEntity
+    )
 
     @Query("SELECT * FROM ChargerEntity WHERE type=:type AND userId=:userId")
     fun getFavorites(userId: String, type: String = "favorites"): LiveData<List<ChargerEntity>>
 
-
-    @Query("SELECT * FROM ChargerEntity WHERE type=:type AND userId=:userId")
-    fun getHistory(userId: String, type: String = "history"): LiveData<List<ChargerEntity>>
+    @Query("SELECT * FROM ChargerEntity WHERE type=:type AND userId=:userId ORDER BY timeVisited DESC")
+    fun getHistory(
+        userId: String,
+        type: String = "history"
+    ): LiveData<List<ChargerEntity>>
 
 }

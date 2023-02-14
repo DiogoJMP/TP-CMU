@@ -1,5 +1,7 @@
 package pt.ipp.estg.cmu.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,6 +19,7 @@ import pt.ipp.estg.cmu.composables.screens.*
 import pt.ipp.estg.cmu.room.ChargerRepository
 import pt.ipp.estg.cmu.viewmodels.LocationVM
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(
     navController: NavHostController,
@@ -48,7 +51,7 @@ fun Navigation(
     }) { paddingValues ->
         NavHost(navController = navController, startDestination = Screen.SplashScreen.route) {
             composable(route = Screen.SplashScreen.route) {
-                SplashScreen(navController = navController, paddingValues)
+                SplashScreen(navController = navController)
             }
             composable(route = Screen.SignUpScreen.route) {
                 AuthScreen(navController = navController, type = "Sign Up", auth)
@@ -63,10 +66,10 @@ fun Navigation(
                 ChargersScreen(locationVM, paddingValues, chargerRepository, auth)
             }
             composable(BottomScreen.FavoritesScreen.route) {
-                FavoritesScreen(paddingValues, chargerRepository)
+                FavoritesScreen(paddingValues, chargerRepository, auth)
             }
             composable(BottomScreen.HistoryScreen.route) {
-                HistoryScreen(paddingValues, chargerRepository)
+                HistoryScreen(paddingValues, chargerRepository, auth)
             }
         }
     }

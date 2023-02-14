@@ -1,15 +1,15 @@
 package pt.ipp.estg.cmu.classes
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import pt.ipp.estg.cmu.api.openchargemap.*
+import java.util.*
+import kotlin.collections.ArrayList
 
-@Entity
 data class Charger(
     val id: Int,
     val addressInfo: AddressInfo,
     val status: StatusType,
-    val connections: ArrayList<Connections> = arrayListOf(),
-    val usageCost: String?,
+    val connections: ArrayList<Connection> = arrayListOf(),
+    val usageType: UsageType,
     val operatorInfo: OperatorInfo,
+    val timeVisited: Date?
 )

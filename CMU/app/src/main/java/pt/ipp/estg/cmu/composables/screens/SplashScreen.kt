@@ -1,6 +1,5 @@
 package pt.ipp.estg.cmu.composables.screens
 
-import android.media.tv.TvContract.Channels.Logo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -22,7 +21,7 @@ import pt.ipp.estg.cmu.ui.theme.Purple40
 import pt.ipp.estg.cmu.ui.theme.Purple50
 
 @Composable
-fun SplashScreen(navController: NavHostController, paddingValues: PaddingValues) {
+fun SplashScreen(navController: NavHostController) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -11,7 +11,7 @@ data class OCMResponse(
     @SerializedName("ID") var ID: Int,
     @SerializedName("UsageCost") var UsageCost: String,
     @SerializedName("AddressInfo") var AddressInfo: AddressInfo = AddressInfo(),
-    @SerializedName("Connections") var Connections: ArrayList<Connections> = arrayListOf(),
+    @SerializedName("Connections") var Connections: ArrayList<Connection> = arrayListOf(),
     @SerializedName("NumberOfPoints") var NumberOfPoints: Int,
     @SerializedName("DateLastStatusUpdate") var DateLastStatusUpdate: String
 )
@@ -87,7 +87,7 @@ data class CurrentType(
     @SerializedName("Title") var Title: String? = null
 )
 
-data class Connections(
+data class Connection(
     @SerializedName("ID") var ID: Int? = null,
     @SerializedName("ConnectionType") var ConnectionType: ConnectionType? = ConnectionType(),
     @SerializedName("Reference") var Reference: String? = null,

@@ -37,8 +37,9 @@ class OCMLookup {
                                 charger.AddressInfo,
                                 charger.StatusType,
                                 charger.Connections,
-                                charger.UsageCost,
-                                charger.OperatorInfo
+                                charger.UsageType,
+                                charger.OperatorInfo,
+                                null
                             )
                         )
                     }
