@@ -11,25 +11,11 @@ import java.time.LocalDateTime
 
 @Dao
 interface ChargerDAO {
-    @Query("SELECT * FROM ChargerEntity WHERE userId=:userId")
-    fun getChargersByUserId(userId: String): LiveData<List<ChargerEntity>>
+
+    @Query("SELECT * FROM ChargerEntity")
+    fun getChargers(): LiveData<List<ChargerEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAsFavorite(charger: ChargerEntity)
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAsHistory(
-        charger: ChargerEntity
-    )
-
-    @Query("SELECT * FROM ChargerEntity WHERE type=:type AND userId=:userId")
-    fun getFavorites(userId: String, type: String = "favorites"): LiveData<List<ChargerEntity>>
-
-    @Query("SELECT * FROM ChargerEntity WHERE type=:type AND userId=:userId ORDER BY timeVisited DESC")
-    fun getHistory(
-        userId: String,
-        type: String = "history"
-    ): LiveData<List<ChargerEntity>>
+    suspend fun insertChargers(chargers: List<ChargerEntity>)
 
 }

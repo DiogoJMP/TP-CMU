@@ -39,17 +39,10 @@ class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var listeningForUpdates = false
 
-    private lateinit var chargerRepository: ChargerRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        val chargerDB = ChargerRoomDB.getInstance(this.baseContext.applicationContext)
-        val chargerDAO = chargerDB.chargerDAO()
-        chargerRepository = ChargerRepository(chargerDAO)
-
 
         startUpdatingLocation()
 
@@ -60,7 +53,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    Navigation(navController, locationVM, chargerRepository)
+                    Navigation(navController, locationVM)
                 }
             }
         }

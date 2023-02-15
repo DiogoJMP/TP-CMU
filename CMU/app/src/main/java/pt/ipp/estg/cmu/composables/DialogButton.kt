@@ -13,12 +13,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import pt.ipp.estg.cmu.classes.Charger
+import pt.ipp.estg.cmu.classes.FavoritedCharger
+import pt.ipp.estg.cmu.classes.VisitedCharger
 import pt.ipp.estg.cmu.room.ChargerEntity
 import pt.ipp.estg.cmu.room.ChargerRepository
+import pt.ipp.estg.cmu.viewmodels.FavoritesVM
+import pt.ipp.estg.cmu.viewmodels.HistoryVM
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
@@ -27,7 +32,8 @@ import java.util.*
 @Composable
 fun DialogButton(
     charger: Charger,
-    chargerRepository: ChargerRepository,
+    favoritesVM: FavoritesVM = viewModel(),
+    historyVM: HistoryVM = viewModel(),
     auth: FirebaseAuth,
     type: String,
     context: Context
@@ -42,39 +48,31 @@ fun DialogButton(
 
     Button(onClick = {
         if (type == "favorites") {
-            coroutineScope.launch {
-                chargerRepository.insertAsFavorite(
-                    ChargerEntity(
-                        charger.id,
-                        auth.currentUser!!.uid,
-                        gsonAddress,
-                        gsonStatus,
-                        gsonConnections,
-                        gsonUsage,
-                        gsonOperator,
-                        type,
-                        0
-                    )
-                )
-                Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
-
-            }
+            favoritesVM.addFavorite(
+                FavoritedCharger(
+                    charger.id.toString(),
+                    gsonAddress,
+                    gsonStatus,
+                    gsonConnections,
+                    gsonUsage,
+                    gsonOperator
+                ),
+                Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT)
+            )
         } else {
             coroutineScope.launch {
-                chargerRepository.insertAsHistory(
-                    ChargerEntity(
-                        charger.id,
-                        auth.currentUser!!.uid,
+                historyVM.visitCharger(
+                    VisitedCharger(
+                        charger.id.toString(),
                         gsonAddress,
                         gsonStatus,
                         gsonConnections,
                         gsonUsage,
                         gsonOperator,
-                        type,
                         System.currentTimeMillis()
-                    )
+                    ),
+                    Toast.makeText(context, "Marked as visited", Toast.LENGTH_SHORT)
                 )
-                Toast.makeText(context, "Marked as visited", Toast.LENGTH_SHORT).show()
             }
         }
     }

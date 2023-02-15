@@ -22,17 +22,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import pt.ipp.estg.cmu.api.openchargemap.Connection
 import pt.ipp.estg.cmu.classes.Charger
 import pt.ipp.estg.cmu.room.ChargerRepository
 import pt.ipp.estg.cmu.ui.theme.Purple40
+import pt.ipp.estg.cmu.viewmodels.FavoritesVM
+import pt.ipp.estg.cmu.viewmodels.HistoryVM
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChargerDetailsDialog(
     charger: Charger,
-    chargerRepository: ChargerRepository,
+    favoritesVM: FavoritesVM = viewModel(),
+    historyVM: HistoryVM = viewModel(),
     auth: FirebaseAuth,
     dialogState: MutableState<Boolean>,
     flag: String
@@ -79,7 +83,6 @@ fun ChargerDetailsDialog(
                 val context = LocalContext.current
                 DialogButton(
                     charger = charger,
-                    chargerRepository = chargerRepository,
                     auth = auth,
                     type = "favorites",
                     context = context
@@ -88,7 +91,6 @@ fun ChargerDetailsDialog(
                     Spacer(modifier = Modifier.size(3.dp))
                     DialogButton(
                         charger = charger,
-                        chargerRepository = chargerRepository,
                         auth = auth,
                         type = "history",
                         context = context

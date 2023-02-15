@@ -1,5 +1,6 @@
 package pt.ipp.estg.cmu.navigation
 
+import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material.Scaffold
@@ -16,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import pt.ipp.estg.cmu.composables.screens.*
-import pt.ipp.estg.cmu.room.ChargerRepository
+import pt.ipp.estg.cmu.viewmodels.ChargersVM
 import pt.ipp.estg.cmu.viewmodels.LocationVM
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -24,7 +25,6 @@ import pt.ipp.estg.cmu.viewmodels.LocationVM
 fun Navigation(
     navController: NavHostController,
     locationVM: LocationVM,
-    chargerRepository: ChargerRepository,
     auth: FirebaseAuth = Firebase.auth
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -63,13 +63,18 @@ fun Navigation(
                 HomeScreen()
             }
             composable(BottomScreen.ChargersScreen.route) {
-                ChargersScreen(locationVM, paddingValues, chargerRepository, auth)
+                val currentLocation by locationVM.location.observeAsState()
+                ChargersScreen(
+                    currentLocation = currentLocation!!,
+                    paddingValues = paddingValues,
+                    auth = auth
+                )
             }
             composable(BottomScreen.FavoritesScreen.route) {
-                FavoritesScreen(paddingValues, chargerRepository, auth)
+                FavoritesScreen(auth = auth)
             }
             composable(BottomScreen.HistoryScreen.route) {
-                HistoryScreen(paddingValues, chargerRepository, auth)
+                HistoryScreen(auth = auth)
             }
         }
     }

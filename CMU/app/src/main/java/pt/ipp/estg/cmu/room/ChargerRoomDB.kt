@@ -6,12 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [ChargerEntity::class],
-    version = 6,
+    entities = [ChargerEntity::class, ChargerUser::class],
+    version = 7,
     exportSchema = false
 )
 abstract class ChargerRoomDB : RoomDatabase() {
     abstract fun chargerDAO(): ChargerDAO
+    abstract fun chargerUserDAO(): ChargerUserDAO
 
     companion object {
         @Volatile

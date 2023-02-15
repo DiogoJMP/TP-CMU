@@ -33,13 +33,12 @@ class OCMLookup {
                     for (charger in chargers) {
                         chargersList.add(
                             Charger(
-                                charger.ID,
+                                charger.ID.toString(),
                                 charger.AddressInfo,
                                 charger.StatusType,
                                 charger.Connections,
                                 charger.UsageType,
-                                charger.OperatorInfo,
-                                null
+                                charger.OperatorInfo
                             )
                         )
                     }
