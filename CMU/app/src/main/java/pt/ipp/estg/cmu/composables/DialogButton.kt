@@ -12,21 +12,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import pt.ipp.estg.cmu.classes.Charger
-import pt.ipp.estg.cmu.classes.FavoritedCharger
+import pt.ipp.estg.cmu.classes.FavoriteCharger
 import pt.ipp.estg.cmu.classes.VisitedCharger
-import pt.ipp.estg.cmu.room.ChargerEntity
-import pt.ipp.estg.cmu.room.ChargerRepository
 import pt.ipp.estg.cmu.viewmodels.FavoritesVM
 import pt.ipp.estg.cmu.viewmodels.HistoryVM
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -34,12 +28,9 @@ fun DialogButton(
     charger: Charger,
     favoritesVM: FavoritesVM = viewModel(),
     historyVM: HistoryVM = viewModel(),
-    auth: FirebaseAuth,
     type: String,
     context: Context
 ) {
-
-    val coroutineScope = rememberCoroutineScope()
     val gsonAddress = Gson().toJson(charger.addressInfo)
     val gsonStatus = Gson().toJson(charger.status)
     val gsonConnections = Gson().toJson(charger.connections)
@@ -49,8 +40,8 @@ fun DialogButton(
     Button(onClick = {
         if (type == "favorites") {
             favoritesVM.addFavorite(
-                FavoritedCharger(
-                    charger.id.toString(),
+                FavoriteCharger(
+                    charger.id,
                     gsonAddress,
                     gsonStatus,
                     gsonConnections,
@@ -59,21 +50,21 @@ fun DialogButton(
                 ),
                 Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT)
             )
+            Log.d("Chargerid", charger.id)
         } else {
-            coroutineScope.launch {
-                historyVM.visitCharger(
-                    VisitedCharger(
-                        charger.id.toString(),
-                        gsonAddress,
-                        gsonStatus,
-                        gsonConnections,
-                        gsonUsage,
-                        gsonOperator,
-                        System.currentTimeMillis()
-                    ),
-                    Toast.makeText(context, "Marked as visited", Toast.LENGTH_SHORT)
-                )
-            }
+            historyVM.visitCharger(
+                VisitedCharger(
+                    charger.id,
+                    gsonAddress,
+                    gsonStatus,
+                    gsonConnections,
+                    gsonUsage,
+                    gsonOperator,
+                    System.currentTimeMillis()
+                ),
+                Toast.makeText(context, "Marked as visited", Toast.LENGTH_SHORT)
+            )
+
         }
     }
     ) {

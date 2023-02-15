@@ -28,7 +28,8 @@ class VisitedCollection(
         firestore.collection("users")
             .document(user)
             .collection("visited")
-            .add(charger)
+            .document(charger.id)
+            .set(charger)
             .await()
     }
 

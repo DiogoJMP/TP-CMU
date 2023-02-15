@@ -19,11 +19,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.launch
 import pt.ipp.estg.cmu.api.openchargemap.*
 import pt.ipp.estg.cmu.classes.Charger
 import pt.ipp.estg.cmu.classes.VisitedCharger
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
 import pt.ipp.estg.cmu.viewmodels.HistoryVM
+import pt.ipp.estg.cmu.viewmodels.RatingsVM
 import java.text.SimpleDateFormat
 import kotlin.collections.ArrayList
 
@@ -31,11 +33,15 @@ import kotlin.collections.ArrayList
 @Composable
 fun HistoryScreen(
     auth: FirebaseAuth,
-    historyVM: HistoryVM = viewModel()
+    historyVM: HistoryVM = viewModel(),
+    ratingsVM: RatingsVM = viewModel()
 ) {
     val history by historyVM.getVisited().collectAsState(emptyList())
     val dialogState = rememberSaveable { (mutableStateOf(false)) }
     val selectedCard = remember { (mutableStateOf(0)) }
+    val coroutineScope = rememberCoroutineScope()
+    val rating = remember { mutableStateOf("") }
+
     when {
         history.isEmpty() -> Text(
             modifier = Modifier.fillMaxWidth(),
@@ -44,6 +50,9 @@ fun HistoryScreen(
         else -> LazyColumn() {
             items(history.size) { index ->
                 val charger = visitedChargerToCharger(history[index])
+                coroutineScope.launch {
+                    rating.value = ratingsVM.getRating(charger.id)?.averageScore.toString()
+                }
                 Card(
                     border = BorderStroke(1.dp, Color.Blue),
                     modifier = Modifier
@@ -60,7 +69,7 @@ fun HistoryScreen(
                                 charger = visitedChargerToCharger(history[selectedCard.value]),
                                 auth = auth,
                                 dialogState = dialogState,
-                                flag = "else"
+                                flag = "history"
                             )
                         }
                     }
@@ -70,7 +79,6 @@ fun HistoryScreen(
                             .fillMaxWidth()
                     ) {
                         charger.addressInfo.Title?.let { Text(it) }
-                        charger.addressInfo.AddressLine1?.let { Text(it) }
                         charger.status.Title?.let { Text(it) }
                         Text(SimpleDateFormat("dd/MM/yy HH:mm").format(history[index].timeVisited))
                     }

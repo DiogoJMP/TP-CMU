@@ -15,14 +15,7 @@ import pt.ipp.estg.cmu.room.ChargerUserRepository
 
 class HistoryVM(application: Application) :
     AndroidViewModel(application) {
-    private val chargerRepository: ChargerUserRepository
     private val collection = VisitedCollection()
-
-    init {
-        val chargerDB = ChargerRoomDB.getInstance(application)
-        val chargerUserDAO = chargerDB.chargerUserDAO()
-        chargerRepository = ChargerUserRepository(chargerUserDAO)
-    }
 
     fun visitCharger(charger: VisitedCharger, toast: Toast) {
         viewModelScope.launch {

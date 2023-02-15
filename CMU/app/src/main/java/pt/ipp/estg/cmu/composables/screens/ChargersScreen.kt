@@ -18,17 +18,21 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 import pt.ipp.estg.cmu.api.openchargemap.*
 import pt.ipp.estg.cmu.classes.Charger
+import pt.ipp.estg.cmu.classes.ChargerRating
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
 import pt.ipp.estg.cmu.room.ChargerEntity
 import pt.ipp.estg.cmu.viewmodels.ChargersVM
+import pt.ipp.estg.cmu.viewmodels.RatingsVM
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChargersScreen(
     currentLocation: Location,
     chargersVM: ChargersVM = viewModel(),
+    ratingsVM: RatingsVM = viewModel(),
     paddingValues: PaddingValues,
     auth: FirebaseAuth
 ) {
@@ -36,10 +40,15 @@ fun ChargersScreen(
     val chargers by chargersVM.chargerList.observeAsState(listOf())
     val dialogState = rememberSaveable { (mutableStateOf(false)) }
     val selectedCard = remember { (mutableStateOf(0)) }
+    val coroutineScope = rememberCoroutineScope()
+    val rating = remember { mutableStateOf("") }
 
     LazyColumn(Modifier.padding(paddingValues)) {
         items(chargers.size) { index ->
             val charger = chargerEntityToCharger(chargers[index])
+            coroutineScope.launch {
+                rating.value = ratingsVM.getRating(charger.id)?.averageScore.toString()
+            }
             Card(
                 border = BorderStroke(1.dp, Color.Blue),
                 modifier = Modifier
@@ -66,8 +75,8 @@ fun ChargersScreen(
                         .fillMaxWidth()
                 ) {
                     charger.addressInfo.Title?.let { Text(it) }
-                    charger.addressInfo.AddressLine1?.let { Text(it) }
                     charger.status.Title?.let { Text(it) }
+                    Text(text = if (rating.value != "" || rating.value != null) rating.value else "No ratings")
                 }
             }
         }

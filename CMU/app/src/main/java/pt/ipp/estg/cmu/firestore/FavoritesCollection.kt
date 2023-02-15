@@ -10,25 +10,26 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import pt.ipp.estg.cmu.classes.FavoritedCharger
+import pt.ipp.estg.cmu.classes.FavoriteCharger
 
 class FavoritesCollection(
     private val firestore: FirebaseFirestore = Firebase.firestore,
     private val auth: FirebaseAuth = Firebase.auth
 ) {
     private val user = auth.currentUser!!.uid
-    val favorites: Flow<List<FavoritedCharger>> =
+    val favorites: Flow<List<FavoriteCharger>> =
         firestore.collection("users")
             .document(user)
             .collection("favorites")
             .snapshots()
             .map { snapshot -> snapshot.toObjects() }
 
-    suspend fun add(charger: FavoritedCharger) {
+    suspend fun add(charger: FavoriteCharger) {
         firestore.collection("users")
             .document(user)
             .collection("favorites")
-            .add(charger)
+            .document(charger.id)
+            .set(charger)
             .await()
     }
 

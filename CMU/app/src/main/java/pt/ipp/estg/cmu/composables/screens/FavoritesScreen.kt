@@ -1,6 +1,7 @@
 package pt.ipp.estg.cmu.composables.screens
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
@@ -18,22 +19,28 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 import pt.ipp.estg.cmu.api.openchargemap.*
 import pt.ipp.estg.cmu.classes.Charger
-import pt.ipp.estg.cmu.classes.FavoritedCharger
+import pt.ipp.estg.cmu.classes.FavoriteCharger
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
 import pt.ipp.estg.cmu.viewmodels.FavoritesVM
+import pt.ipp.estg.cmu.viewmodels.RatingsVM
 import kotlin.collections.ArrayList
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FavoritesScreen(
     auth: FirebaseAuth,
-    favoritesVM: FavoritesVM = viewModel()
+    favoritesVM: FavoritesVM = viewModel(),
+    ratingsVM: RatingsVM = viewModel()
 ) {
     val favorites by favoritesVM.getFavorites().collectAsState(emptyList())
     val dialogState = rememberSaveable { (mutableStateOf(false)) }
     val selectedCard = remember { (mutableStateOf(0)) }
+    val coroutineScope = rememberCoroutineScope()
+    val rating = remember { mutableStateOf("") }
+
     when {
         favorites.isEmpty() -> Text(
             modifier = Modifier.fillMaxWidth(),
@@ -42,6 +49,9 @@ fun FavoritesScreen(
         else -> LazyColumn() {
             items(favorites.size) { index ->
                 val charger = favoritedChargerToCharger(favorites[index])
+                coroutineScope.launch {
+                    rating.value = ratingsVM.getRating(charger.id)?.averageScore.toString()
+                }
                 Card(
                     border = BorderStroke(1.dp, Color.Blue),
                     modifier = Modifier
@@ -68,8 +78,8 @@ fun FavoritesScreen(
                             .fillMaxWidth()
                     ) {
                         charger.addressInfo.Title?.let { Text(it) }
-                        charger.addressInfo.AddressLine1?.let { Text(it) }
                         charger.status.Title?.let { Text(it) }
+                        Text(text = if (rating.value != "") rating.value else "No ratings")
                     }
                 }
             }
@@ -77,7 +87,7 @@ fun FavoritesScreen(
     }
 }
 
-fun favoritedChargerToCharger(favoritedCharger: FavoritedCharger): Charger {
+fun favoritedChargerToCharger(favoritedCharger: FavoriteCharger): Charger {
     val addressInfo =
         Gson().fromJson(favoritedCharger.addressInfo, AddressInfo::class.java)
     val statusType =

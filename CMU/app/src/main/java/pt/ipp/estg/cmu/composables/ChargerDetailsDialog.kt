@@ -83,7 +83,6 @@ fun ChargerDetailsDialog(
                 val context = LocalContext.current
                 DialogButton(
                     charger = charger,
-                    auth = auth,
                     type = "favorites",
                     context = context
                 )
@@ -91,7 +90,6 @@ fun ChargerDetailsDialog(
                     Spacer(modifier = Modifier.size(3.dp))
                     DialogButton(
                         charger = charger,
-                        auth = auth,
                         type = "history",
                         context = context
                     )
