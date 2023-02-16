@@ -108,7 +108,7 @@ fun AuthButton(
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setAutoCancel(true)
         .setContentIntent(PendingIntent.getActivity(context, 0, Intent(), 0))
-    
+
     Button(
         onClick = {
             if (type == "Sign Up") {
