@@ -39,6 +39,9 @@ fun HistoryScreen(
     historyVM: HistoryVM = viewModel()
 ) {
     val history by historyVM.getVisited().collectAsState(emptyList())
+
+    val sortedChargers = history.sortedWith(compareBy { it.timeVisited })
+
     val dialogState = rememberSaveable { (mutableStateOf(false)) }
     val selectedCard = remember { (mutableStateOf(0)) }
 
@@ -66,8 +69,8 @@ fun HistoryScreen(
                     .fillMaxHeight()
             ) {
                 LazyColumn() {
-                    items(history.size) { index ->
-                        val charger = visitedChargerToCharger(history[index])
+                    items(sortedChargers.size) { index ->
+                        val charger = visitedChargerToCharger(sortedChargers[index])
                         Card(
                             border = BorderStroke(1.dp, Purple40),
                             modifier = Modifier
@@ -76,7 +79,7 @@ fun HistoryScreen(
                             when {
                                 dialogState.value -> {
                                     ChargerDetailsDialog(
-                                        charger = visitedChargerToCharger(history[selectedCard.value]),
+                                        charger = visitedChargerToCharger(sortedChargers[selectedCard.value]),
                                         auth = auth,
                                         dialogState = dialogState,
                                         flag = "history"
@@ -91,7 +94,7 @@ fun HistoryScreen(
                                     horizontalAlignment = Alignment.Start
                                 ) {
                                     charger.addressInfo.Title?.let { Text(it) }
-                                    Text(SimpleDateFormat("dd/MM/yy HH:mm").format(history[index].timeVisited))
+                                    Text(SimpleDateFormat("dd/MM/yy HH:mm").format(sortedChargers[index].timeVisited))
                                 }
                                 Column(
                                     modifier = Modifier

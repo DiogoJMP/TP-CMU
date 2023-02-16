@@ -81,11 +81,13 @@ fun ChargerDetailsDialog(
         buttons = {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 val context = LocalContext.current
-                DialogButton(
-                    charger = charger,
-                    type = "favorites",
-                    context = context
-                )
+                if (flag != "favorites") {
+                    DialogButton(
+                        charger = charger,
+                        type = "favorites",
+                        context = context
+                    )
+                }
                 if (flag != "history") {
                     Spacer(modifier = Modifier.size(3.dp))
                     DialogButton(

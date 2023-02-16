@@ -28,17 +28,7 @@ class VisitedCollection(
         firestore.collection("users")
             .document(user)
             .collection("visited")
-            .document(charger.id)
-            .set(charger)
-            .await()
-    }
-
-    suspend fun remove(id: String) {
-        firestore.collection("users")
-            .document(user)
-            .collection("visited")
-            .document(id)
-            .delete()
+            .add(charger)
             .await()
     }
 }

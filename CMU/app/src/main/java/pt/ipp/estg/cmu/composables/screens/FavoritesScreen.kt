@@ -77,7 +77,7 @@ fun FavoritesScreen(
                                         charger = favoriteChargerToCharger(favorites[selectedCard.value]),
                                         auth = auth,
                                         dialogState = dialogState,
-                                        flag = "else"
+                                        flag = "favorites"
                                     )
                                 }
                             }
