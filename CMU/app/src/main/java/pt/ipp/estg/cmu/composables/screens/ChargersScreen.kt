@@ -12,27 +12,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
-import kotlinx.coroutines.launch
 import pt.ipp.estg.cmu.api.openchargemap.*
 import pt.ipp.estg.cmu.classes.Charger
-import pt.ipp.estg.cmu.classes.ChargerRating
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
 import pt.ipp.estg.cmu.room.ChargerEntity
+import pt.ipp.estg.cmu.ui.theme.Purple40
 import pt.ipp.estg.cmu.viewmodels.ChargersVM
-import pt.ipp.estg.cmu.viewmodels.RatingsVM
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChargersScreen(
     currentLocation: Location,
     chargersVM: ChargersVM = viewModel(),
-    ratingsVM: RatingsVM = viewModel(),
     paddingValues: PaddingValues,
     auth: FirebaseAuth
 ) {
@@ -40,25 +38,15 @@ fun ChargersScreen(
     val chargers by chargersVM.chargerList.observeAsState(listOf())
     val dialogState = rememberSaveable { (mutableStateOf(false)) }
     val selectedCard = remember { (mutableStateOf(0)) }
-    val coroutineScope = rememberCoroutineScope()
-    val rating = remember { mutableStateOf("") }
 
     LazyColumn(Modifier.padding(paddingValues)) {
         items(chargers.size) { index ->
             val charger = chargerEntityToCharger(chargers[index])
-            coroutineScope.launch {
-                rating.value = ratingsVM.getRating(charger.id)?.averageScore.toString()
-            }
             Card(
-                border = BorderStroke(1.dp, Color.Blue),
+                border = BorderStroke(1.dp, Purple40),
                 modifier = Modifier
                     .padding(5.dp),
             ) {
-                Button(
-                    onClick = {
-                        dialogState.value = true
-                        selectedCard.value = index
-                    }) { Text("View more") }
                 when {
                     dialogState.value -> {
                         ChargerDetailsDialog(
@@ -69,14 +57,33 @@ fun ChargersScreen(
                         )
                     }
                 }
-                Column(
-                    modifier = Modifier
-                        .padding(3.dp)
-                        .fillMaxWidth()
-                ) {
-                    charger.addressInfo.Title?.let { Text(it) }
-                    charger.status.Title?.let { Text(it) }
-                    Text(text = if (rating.value != "" || rating.value != null) rating.value else "No ratings")
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        charger.addressInfo.Title?.let { Text(it) }
+                        charger.status.Title?.let { Text(it) }
+                    }
+                    Column(
+                        modifier = Modifier
+                            .padding(3.dp)
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .align(Alignment.CenterVertically),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.End
+                    ) {
+
+                        Button(
+                            onClick = {
+                                dialogState.value = true
+                                selectedCard.value = index
+                            }, modifier = Modifier.align(Alignment.End)
+                        ) { Text("View more") }
+                    }
                 }
             }
         }

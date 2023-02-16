@@ -3,29 +3,28 @@ package pt.ipp.estg.cmu.composables.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.launch
 import pt.ipp.estg.cmu.api.openchargemap.*
 import pt.ipp.estg.cmu.classes.Charger
 import pt.ipp.estg.cmu.classes.VisitedCharger
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
+import pt.ipp.estg.cmu.ui.theme.Purple40
 import pt.ipp.estg.cmu.viewmodels.HistoryVM
-import pt.ipp.estg.cmu.viewmodels.RatingsVM
 import java.text.SimpleDateFormat
 import kotlin.collections.ArrayList
 
@@ -33,58 +32,66 @@ import kotlin.collections.ArrayList
 @Composable
 fun HistoryScreen(
     auth: FirebaseAuth,
-    historyVM: HistoryVM = viewModel(),
-    ratingsVM: RatingsVM = viewModel()
+    historyVM: HistoryVM = viewModel()
 ) {
     val history by historyVM.getVisited().collectAsState(emptyList())
     val dialogState = rememberSaveable { (mutableStateOf(false)) }
     val selectedCard = remember { (mutableStateOf(0)) }
-    val coroutineScope = rememberCoroutineScope()
-    val rating = remember { mutableStateOf("") }
 
     when {
         history.isEmpty() -> Text(
             modifier = Modifier.fillMaxWidth(),
+            fontSize = 12.sp,
             text = "You haven't visited any chargers yet"
         )
-        else -> LazyColumn() {
-            items(history.size) { index ->
-                val charger = visitedChargerToCharger(history[index])
-                coroutineScope.launch {
-                    rating.value = ratingsVM.getRating(charger.id)?.averageScore.toString()
-                }
-                Card(
-                    border = BorderStroke(1.dp, Color.Blue),
-                    modifier = Modifier
-                        .padding(5.dp),
-                ) {
-                    Button(
-                        onClick = {
-                            dialogState.value = true
-                            selectedCard.value = index
-                        }) { Text("View more") }
-                    when {
-                        dialogState.value -> {
-                            ChargerDetailsDialog(
-                                charger = visitedChargerToCharger(history[selectedCard.value]),
-                                auth = auth,
-                                dialogState = dialogState,
-                                flag = "history"
-                            )
-                        }
-                    }
-                    Column(
+        else ->
+            LazyColumn() {
+                items(history.size) { index ->
+                    val charger = visitedChargerToCharger(history[index])
+                    Card(
+                        border = BorderStroke(1.dp, Purple40),
                         modifier = Modifier
-                            .padding(3.dp)
-                            .fillMaxWidth()
+                            .padding(5.dp),
                     ) {
-                        charger.addressInfo.Title?.let { Text(it) }
-                        charger.status.Title?.let { Text(it) }
-                        Text(SimpleDateFormat("dd/MM/yy HH:mm").format(history[index].timeVisited))
+                        when {
+                            dialogState.value -> {
+                                ChargerDetailsDialog(
+                                    charger = visitedChargerToCharger(history[selectedCard.value]),
+                                    auth = auth,
+                                    dialogState = dialogState,
+                                    flag = "history"
+                                )
+                            }
+                        }
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(10.dp),
+                                verticalArrangement = Arrangement.Top,
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                charger.addressInfo.Title?.let { Text(it) }
+                                Text(SimpleDateFormat("dd/MM/yy HH:mm").format(history[index].timeVisited))
+                            }
+                            Column(
+                                modifier = Modifier
+                                    .padding(3.dp)
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .align(Alignment.CenterVertically),
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Button(
+                                    onClick = {
+                                        dialogState.value = true
+                                        selectedCard.value = index
+                                    }, modifier = Modifier.align(Alignment.End)
+                                ) { Text("View more") }
+                            }
+                        }
                     }
                 }
             }
-        }
     }
 }
 

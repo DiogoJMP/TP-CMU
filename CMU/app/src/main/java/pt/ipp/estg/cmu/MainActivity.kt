@@ -2,6 +2,9 @@ package pt.ipp.estg.cmu
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -16,12 +19,7 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.*
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import pt.ipp.estg.cmu.navigation.Navigation
-import pt.ipp.estg.cmu.room.ChargerRepository
-import pt.ipp.estg.cmu.room.ChargerRoomDB
 import pt.ipp.estg.cmu.ui.theme.CMUTheme
 import pt.ipp.estg.cmu.viewmodels.LocationVM
 
@@ -39,13 +37,14 @@ class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var listeningForUpdates = false
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         startUpdatingLocation()
-
+        createNotificationChannel()
         setContent {
             CMUTheme {
                 Surface(
@@ -83,4 +82,19 @@ class MainActivity : ComponentActivity() {
             Log.d("Location", "Unable to get location", e)
         }
     }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "channel"
+            val descriptionText = "description_channel"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("POWERLESS_NOTIFICATION", name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 }
+
