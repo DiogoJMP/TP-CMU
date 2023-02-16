@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -26,6 +27,7 @@ import pt.ipp.estg.cmu.classes.CustomFont
 import pt.ipp.estg.cmu.classes.VisitedCharger
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
 import pt.ipp.estg.cmu.ui.theme.Purple40
+import pt.ipp.estg.cmu.ui.theme.Purple50
 import pt.ipp.estg.cmu.viewmodels.HistoryVM
 import java.text.SimpleDateFormat
 import kotlin.collections.ArrayList
@@ -58,48 +60,55 @@ fun HistoryScreen(
                 )
             }
         else ->
-            LazyColumn() {
-                items(history.size) { index ->
-                    val charger = visitedChargerToCharger(history[index])
-                    Card(
-                        border = BorderStroke(1.dp, Purple40),
-                        modifier = Modifier
-                            .padding(5.dp),
-                    ) {
-                        when {
-                            dialogState.value -> {
-                                ChargerDetailsDialog(
-                                    charger = visitedChargerToCharger(history[selectedCard.value]),
-                                    auth = auth,
-                                    dialogState = dialogState,
-                                    flag = "history"
-                                )
+            Column(
+                Modifier
+                    .background(Purple40)
+                    .fillMaxHeight()
+            ) {
+                LazyColumn() {
+                    items(history.size) { index ->
+                        val charger = visitedChargerToCharger(history[index])
+                        Card(
+                            border = BorderStroke(1.dp, Purple40),
+                            modifier = Modifier
+                                .padding(5.dp),
+                        ) {
+                            when {
+                                dialogState.value -> {
+                                    ChargerDetailsDialog(
+                                        charger = visitedChargerToCharger(history[selectedCard.value]),
+                                        auth = auth,
+                                        dialogState = dialogState,
+                                        flag = "history"
+                                    )
+                                }
                             }
-                        }
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(10.dp),
-                                verticalArrangement = Arrangement.Top,
-                                horizontalAlignment = Alignment.Start
-                            ) {
-                                charger.addressInfo.Title?.let { Text(it) }
-                                Text(SimpleDateFormat("dd/MM/yy HH:mm").format(history[index].timeVisited))
-                            }
-                            Column(
-                                modifier = Modifier
-                                    .padding(3.dp)
-                                    .fillMaxWidth()
-                                    .fillMaxHeight()
-                                    .align(Alignment.CenterVertically),
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Button(
-                                    onClick = {
-                                        dialogState.value = true
-                                        selectedCard.value = index
-                                    }, modifier = Modifier.align(Alignment.End)
-                                ) { Text("View more") }
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(10.dp),
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.Start
+                                ) {
+                                    charger.addressInfo.Title?.let { Text(it) }
+                                    Text(SimpleDateFormat("dd/MM/yy HH:mm").format(history[index].timeVisited))
+                                }
+                                Column(
+                                    modifier = Modifier
+                                        .padding(3.dp)
+                                        .fillMaxWidth()
+                                        .fillMaxHeight()
+                                        .align(Alignment.CenterVertically),
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Button(
+                                        onClick = {
+                                            dialogState.value = true
+                                            selectedCard.value = index
+                                        },
+                                        modifier = Modifier.align(Alignment.End)
+                                    ) { Text("View more") }
+                                }
                             }
                         }
                     }

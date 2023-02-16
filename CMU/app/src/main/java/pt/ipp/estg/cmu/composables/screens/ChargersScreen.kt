@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -25,6 +26,7 @@ import pt.ipp.estg.cmu.classes.Charger
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
 import pt.ipp.estg.cmu.room.ChargerEntity
 import pt.ipp.estg.cmu.ui.theme.Purple40
+import pt.ipp.estg.cmu.ui.theme.Purple50
 import pt.ipp.estg.cmu.viewmodels.ChargersVM
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -46,61 +48,71 @@ fun ChargersScreen(
     val dialogState = rememberSaveable { (mutableStateOf(false)) }
     val selectedCard = remember { (mutableStateOf(0)) }
 
-    Column {
-
-    }
-    LazyColumn(
+    Column(
         Modifier
-            .padding(paddingValues)
-            .background(Purple40)) {
-        items(sortedChargers.size) { index ->
-            Card(
-                border = BorderStroke(1.dp, Purple40),
-                modifier = Modifier
-                    .padding(5.dp),
-            ) {
-                when {
-                    dialogState.value -> {
-                        ChargerDetailsDialog(
-                            charger = sortedChargers[selectedCard.value],
-                            auth = auth,
-                            dialogState = dialogState,
-                            flag = "else"
-                        )
+            .background(Purple40)
+            .fillMaxHeight()
+    ) {
+        LazyColumn(
+            Modifier
+                .padding(paddingValues)
+                .background(Purple40)
+        ) {
+            items(sortedChargers.size) { index ->
+                Card(
+                    border = BorderStroke(1.dp, Purple40),
+                    modifier = Modifier
+                        .padding(5.dp),
+                ) {
+                    when {
+                        dialogState.value -> {
+                            ChargerDetailsDialog(
+                                charger = sortedChargers[selectedCard.value],
+                                auth = auth,
+                                dialogState = dialogState,
+                                flag = "else"
+                            )
+                        }
                     }
-                }
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Column(
-                        modifier = Modifier
-                            .padding(10.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        sortedChargers[index].addressInfo.Title?.let { Text(it) }
-                        sortedChargers[index].status.Title?.let { Text(it) }
-                        Text(String.format("%.2f km", sortedChargers[index].addressInfo.Distance))
-                    }
-                    Column(
-                        modifier = Modifier
-                            .padding(3.dp)
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .align(Alignment.CenterVertically),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.End
-                    ) {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Column(
+                            modifier = Modifier
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            sortedChargers[index].addressInfo.Title?.let { Text(it) }
+                            sortedChargers[index].status.Title?.let { Text(it) }
+                            Text(
+                                String.format(
+                                    "%.2f km",
+                                    sortedChargers[index].addressInfo.Distance
+                                )
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .padding(3.dp)
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                                .align(Alignment.CenterVertically),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.End
+                        ) {
 
-                        Button(
-                            onClick = {
-                                dialogState.value = true
-                                selectedCard.value = index
-                            }, modifier = Modifier.align(Alignment.End)
-                        ) { Text("View more") }
+                            Button(
+                                onClick = {
+                                    dialogState.value = true
+                                    selectedCard.value = index
+                                }, modifier = Modifier.align(Alignment.End),
+                            ) { Text("View more") }
+                        }
                     }
                 }
             }
         }
     }
+
 }
 
 fun chargerEntityToCharger(chargerEntity: ChargerEntity): Charger {

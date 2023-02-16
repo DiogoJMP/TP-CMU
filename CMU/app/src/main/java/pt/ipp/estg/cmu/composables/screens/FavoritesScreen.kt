@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -25,6 +26,7 @@ import pt.ipp.estg.cmu.classes.CustomFont
 import pt.ipp.estg.cmu.classes.FavoriteCharger
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
 import pt.ipp.estg.cmu.ui.theme.Purple40
+import pt.ipp.estg.cmu.ui.theme.Purple50
 import pt.ipp.estg.cmu.viewmodels.FavoritesVM
 import kotlin.collections.ArrayList
 
@@ -56,55 +58,61 @@ fun FavoritesScreen(
                 )
             }
 
-        else -> LazyColumn(Modifier.background(Purple40)) {
-            items(favorites.size) { index ->
-                val charger = favoriteChargerToCharger(favorites[index])
-                Card(
-                    border = BorderStroke(1.dp, Purple40),
-                    modifier = Modifier
-                        .padding(5.dp),
-                ) {
-                    when {
-                        dialogState.value -> {
-                            ChargerDetailsDialog(
-                                charger = favoriteChargerToCharger(favorites[selectedCard.value]),
-                                auth = auth,
-                                dialogState = dialogState,
-                                flag = "else"
-                            )
-                        }
-                    }
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Column(
+        else ->
+            Column(
+                Modifier
+                    .background(Purple40)
+                    .fillMaxHeight()) {
+                LazyColumn() {
+                    items(favorites.size) { index ->
+                        val charger = favoriteChargerToCharger(favorites[index])
+                        Card(
+                            border = BorderStroke(1.dp, Purple40),
                             modifier = Modifier
-                                .padding(10.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.Start
+                                .padding(5.dp),
                         ) {
-                            charger.addressInfo.Title?.let { Text(it) }
-                            charger.status.Title?.let { Text(it) }
-                        }
-                        Column(
-                            modifier = Modifier
-                                .padding(3.dp)
-                                .fillMaxWidth()
-                                .fillMaxHeight()
-                                .align(Alignment.CenterVertically),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.End
-                        ) {
+                            when {
+                                dialogState.value -> {
+                                    ChargerDetailsDialog(
+                                        charger = favoriteChargerToCharger(favorites[selectedCard.value]),
+                                        auth = auth,
+                                        dialogState = dialogState,
+                                        flag = "else"
+                                    )
+                                }
+                            }
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(10.dp),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.Start
+                                ) {
+                                    charger.addressInfo.Title?.let { Text(it) }
+                                    charger.status.Title?.let { Text(it) }
+                                }
+                                Column(
+                                    modifier = Modifier
+                                        .padding(3.dp)
+                                        .fillMaxWidth()
+                                        .fillMaxHeight()
+                                        .align(Alignment.CenterVertically),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.End
+                                ) {
 
-                            Button(
-                                onClick = {
-                                    dialogState.value = true
-                                    selectedCard.value = index
-                                }, modifier = Modifier.align(Alignment.End)
-                            ) { Text("View more") }
+                                    Button(
+                                        onClick = {
+                                            dialogState.value = true
+                                            selectedCard.value = index
+                                        }, modifier = Modifier.align(Alignment.End)
+                                    ) { Text("View more") }
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
     }
 }
 
