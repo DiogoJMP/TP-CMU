@@ -4,6 +4,7 @@ import android.location.Location
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
@@ -45,7 +46,13 @@ fun ChargersScreen(
     val dialogState = rememberSaveable { (mutableStateOf(false)) }
     val selectedCard = remember { (mutableStateOf(0)) }
 
-    LazyColumn(Modifier.padding(paddingValues)) {
+    Column {
+
+    }
+    LazyColumn(
+        Modifier
+            .padding(paddingValues)
+            .background(Purple40)) {
         items(sortedChargers.size) { index ->
             Card(
                 border = BorderStroke(1.dp, Purple40),

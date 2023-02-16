@@ -3,6 +3,7 @@ package pt.ipp.estg.cmu.composables.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
@@ -21,6 +22,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import pt.ipp.estg.cmu.api.openchargemap.*
 import pt.ipp.estg.cmu.classes.Charger
+import pt.ipp.estg.cmu.classes.CustomFont
 import pt.ipp.estg.cmu.classes.VisitedCharger
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
 import pt.ipp.estg.cmu.ui.theme.Purple40
@@ -39,11 +41,22 @@ fun HistoryScreen(
     val selectedCard = remember { (mutableStateOf(0)) }
 
     when {
-        history.isEmpty() -> Text(
-            modifier = Modifier.fillMaxWidth(),
-            fontSize = 12.sp,
-            text = "You haven't visited any chargers yet"
-        )
+        history.isEmpty() ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .background(Purple40)
+            ) {
+                Text(
+                    fontSize = 14.sp,
+                    text = "You haven't visited any chargers yet",
+                    fontFamily = CustomFont().titleFamily,
+                    color = Color.White
+                )
+            }
         else ->
             LazyColumn() {
                 items(history.size) { index ->

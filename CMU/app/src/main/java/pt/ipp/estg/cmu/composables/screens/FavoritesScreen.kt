@@ -3,6 +3,7 @@ package pt.ipp.estg.cmu.composables.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import pt.ipp.estg.cmu.api.openchargemap.*
 import pt.ipp.estg.cmu.classes.Charger
+import pt.ipp.estg.cmu.classes.CustomFont
 import pt.ipp.estg.cmu.classes.FavoriteCharger
 import pt.ipp.estg.cmu.composables.ChargerDetailsDialog
 import pt.ipp.estg.cmu.ui.theme.Purple40
@@ -36,12 +39,24 @@ fun FavoritesScreen(
     val selectedCard = remember { (mutableStateOf(0)) }
 
     when {
-        favorites.isEmpty() -> Text(
-            modifier = Modifier.fillMaxWidth(),
-            fontSize = 12.sp,
-            text = "You haven't marked any chargers as favorite yet"
-        )
-        else -> LazyColumn() {
+        favorites.isEmpty() ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .background(Purple40)
+            ) {
+                Text(
+                    fontSize = 14.sp,
+                    text = "You haven't marked any chargers as favorite yet",
+                    fontFamily = CustomFont().titleFamily,
+                    color = Color.White
+                )
+            }
+
+        else -> LazyColumn(Modifier.background(Purple40)) {
             items(favorites.size) { index ->
                 val charger = favoriteChargerToCharger(favorites[index])
                 Card(
