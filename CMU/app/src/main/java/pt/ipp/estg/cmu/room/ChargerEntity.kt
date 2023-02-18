@@ -13,4 +13,5 @@ data class ChargerEntity(
     val connections: String,
     val usageType: String,
     val operatorInfo: String,
+    val distance: Double,
 )

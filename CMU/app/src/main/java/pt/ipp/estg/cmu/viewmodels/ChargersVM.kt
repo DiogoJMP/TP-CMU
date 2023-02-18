@@ -2,6 +2,7 @@ package pt.ipp.estg.cmu.viewmodels
 
 import android.app.Application
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -36,12 +37,16 @@ class ChargersVM(application: Application) :
                         statusType = Gson().toJson(charger.status),
                         connections = Gson().toJson(charger.connections),
                         operatorInfo = Gson().toJson(charger.operatorInfo),
-                        usageType = Gson().toJson(charger.usageType)
+                        usageType = Gson().toJson(charger.usageType),
+                        distance = charger.addressInfo.Distance!!
                     )
                 }?.let {
                     chargerRepository.insertChargers(it)
                 }
             }
         }
+    }
+    suspend fun clearCache(){
+        chargerRepository.deleteChargers()
     }
 }

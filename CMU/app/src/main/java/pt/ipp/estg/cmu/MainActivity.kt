@@ -16,16 +16,21 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.*
+import kotlinx.coroutines.launch
 import pt.ipp.estg.cmu.navigation.Navigation
 import pt.ipp.estg.cmu.ui.theme.CMUTheme
+import pt.ipp.estg.cmu.viewmodels.ChargersVM
 import pt.ipp.estg.cmu.viewmodels.LocationVM
 
 class MainActivity : ComponentActivity() {
 
     val locationVM: LocationVM by viewModels()
+    val chargersVM: ChargersVM by viewModels()
 
     private val locationCallback: LocationCallback = object : LocationCallback() {
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -63,6 +68,15 @@ class MainActivity : ComponentActivity() {
         if (checkSelfPermission(ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(ACCESS_FINE_LOCATION), 0)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        lifecycleScope.launch {
+            chargersVM.clearCache()
+            Log.d("OnStop", "Cache Cleared")
+        }
+
     }
 
     @SuppressLint("MissingPermission")

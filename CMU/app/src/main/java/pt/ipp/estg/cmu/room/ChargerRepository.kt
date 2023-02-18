@@ -13,4 +13,8 @@ class ChargerRepository(private val chargerDAO: ChargerDAO) {
     suspend fun insertChargers(chargers: List<ChargerEntity>) {
         return chargerDAO.insertChargers(chargers)
     }
+
+    suspend fun deleteChargers() {
+        return chargerDAO.deleteChargers()
+    }
 }
